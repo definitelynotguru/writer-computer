@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "app": {
+    "windows": [
+      {
+        "title": "Writer",
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "trafficLightPosition": {
+          "x": 20,
+          "y": 29
+        },
+        "transparent": false,
+        "width": 1200,
+        "height": 800,
+        "minWidth": 800,
+        "minHeight": 500,
+        "visible": false
+      }
+    ]
+  },
+  "bundle": {
+    "targets": ["appimage"]
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhEM0FBOEI4M0NCOTlDMDcKUldRSG5Mazh1S2c2alpKVEZUaDBwdmFudEJiekkwcTlBdVA1eDhKNzlocVJ5aUJmR3ByekhmS00K",
+      "endpoints": [
+        "https://github.com/definitelynotguru/writer-computer/releases/latest/download/latest.json"
+      ]
+    }
+  }
+}

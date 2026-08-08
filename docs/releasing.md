@@ -76,6 +76,31 @@ Click **Publish release**. Until you do, the in-app updater won't see the new ve
 - Confirm `https://github.com/joelbqz/writer-computer/releases/latest/download/latest.json` resolves to the new version. The in-app updater hits this URL on launch (see `apps/desktop/src-tauri/tauri.conf.json`).
 - Existing installs will pick up the update on next launch.
 
+## Linux builds
+
+Linux builds are AppImage-only today (no deb/rpm pipeline) and are driven by `tauri.linux.conf.json`, which overrides the base config:
+
+- `app.windows[0].transparent` is `false` — the vibrant translucent window is a macOS-only effect, and an unblurred transparent window reads as a washed-out mess on Linux.
+- `bundle.targets` is `["appimage"]` — deb/rpm need `dpkg-deb`/`rpmbuild`, which aren't part of the default Arch Linux toolchain. Install `dpkg` and `rpm-tools` and broaden the list if you want them.
+- `plugins.updater` carries this fork's own signing key and endpoint. macOS builds keep the upstream key/endpoint; the Linux updater only ever downloads Linux artifacts. Never point a Linux build at `joelbqz/writer-computer`'s updater feed — it only publishes macOS artifacts.
+
+### Cutting a Linux release
+
+`scripts/release-linux.sh` mirrors `scripts/distribute.sh`: it enforces the same pre-flight checks (clean `master`, tag freshness), builds the signed AppImage, assembles `latest.json`, and opens a draft GitHub Release on the fork. Run it with the `.env` signing vars and an agent-drafted notes file:
+
+```sh
+# .env at the repo root:
+#   TAURI_SIGNING_PRIVATE_KEY="<contents of tauri-signing.key>"
+#   TAURI_SIGNING_PRIVATE_KEY_PASSWORD="<password>"
+scripts/release-linux.sh --notes-file /tmp/release-notes.md
+```
+
+Two Arch-family quirks are handled inside the script (they surface as `failed to run linuxdeploy` if you build by hand): `APPIMAGE_EXTRACT_AND_RUN=1` avoids requiring FUSE2, and `NO_STRIP=1` avoids linuxdeploy's 2024-era bundled `strip` choking on `.relr.dyn` sections in modern libraries. The script also bakes the `.sig` into `latest.json` the same way `distribute.sh` does for macOS.
+
+### Signing keys
+
+The updater keypair lives in `~/.config/writer-computer/` on the release machine — **never commit it**. The public key is embedded in `tauri.linux.conf.json`. If you lose the private key or its password, existing installs can't be updated — regenerate a fresh pair and update the config's `pubkey`.
+
 ## When things go wrong
 
 - **Pre-flight check fails.** The script aborted before doing anything irreversible. Read the error, fix the underlying state (commit, pull, bump version, etc.), and re-run.
@@ -88,6 +113,6 @@ Click **Publish release**. Until you do, the in-app updater won't see the new ve
 
 ## What this doc deliberately does not cover
 
-- Cross-platform releases (Windows, Linux, x86_64 macOS). The script and config are arm64-only today.
+- Windows releases, x86_64 macOS, and deb/rpm packaging for Linux. Linux AppImage release handling is covered above; the Apple-specific steps (signing, notarization) remain macOS-only.
 - CI-driven releases. There is no GitHub Actions workflow for this — everything runs on the maintainer's machine because of the Apple signing requirement.
 - Rolling back a published release. There is no documented rollback procedure; if you need one, escalate to the user.

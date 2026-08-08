@@ -1,6 +1,9 @@
 # Changelog
 
-## 2026-07-20
+## 2026-08-08
+
+- Linux support: Writer now builds and ships as an AppImage. The window is opaque (translucency is a macOS vibrancy effect and would read as a washed-out blend on a plain Linux surface), the traffic-light gutter is dropped when the platform doesn't draw an overlay titlebar, and the theme clamps to a fully opaque background before first paint. Updates for Linux installs are signed with the fork's own key.
+- Fix frontend builds from project paths containing spaces: the `@/` and `@shared` Vite aliases were built from `URL.pathname`, which percent-encodes spaces (`computer%20writer`), so the bundler failed to load any source module. Aliases now use `fileURLToPath`.
 
 - Hide status bar metrics and sidebar sections. Right-click the bottom status bar to toggle the word, character, and paragraph counts individually (the bar disappears when all three are off); right-click the sidebar background or a section title to toggle the Search button and the Recents section. All five toggles also live in Preferences — the metric toggles under a new "Status Bar" section, the sidebar ones under Appearance — and every menu lists hidden items as unchecked entries so they can be re-shown from the same place.
 

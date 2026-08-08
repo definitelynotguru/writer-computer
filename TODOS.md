@@ -90,6 +90,7 @@ Previously-triaged work organized by phase. Pull into `Up Next` as capacity open
 See `CHANGELOG.md` and `git log` for shipped work. Notable items:
 
 - [x] External file watcher: external file changes (Finder, git, vim, scripts) reach the sidebar and reload-from-disk reliably; dotdir workspace roots, `/var` aliases, and self-write echoes all fixed ([`SPECs/external-file-watcher-spec.md`](SPECs/external-file-watcher-spec.md))
+- [x] Linux desktop build: `tauri.linux.conf.json` (opaque window, AppImage target, fork-owned updater keys), platform-aware chrome padding and opaque theme clamping on non-macOS, and a Vite alias fix for project paths containing spaces. AppImage + updater artifacts build and sign end-to-end on Arch Linux; see `docs/releasing.md`.
 - [x] Cmd+F polish: safe scroll-into-view, Cmd+G / Cmd+Shift+G next/previous, scrollbar match overview ([`SPECs/cmd-f-spec.md`](SPECs/cmd-f-spec.md))
 - [x] Caret position after history navigation
 - [x] Obsidian-style wikilink parsing — aliases, escaped table pipes, note fragments, same-file fragment links
