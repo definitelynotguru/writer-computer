@@ -41,6 +41,8 @@
     "active": true,
     "targets": "all",
     "createUpdaterArtifacts": true,
+    "category": "Utility",
+    "shortDescription": "Markdown editor for local-first plain-text workflows",
     "macOS": {
       "infoPlist": "Info.plist",
       "entitlements": "./Entitlements.plist",

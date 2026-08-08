@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-08-09
+
+- Fix the missing taskbar icon on Linux: the AppImage was named after the Cargo package (`desktop`), so its desktop entry carried `Icon=desktop` — a name that resolves to a generic system icon. Linux builds now set `mainBinaryName` to `writer-desktop` (the same name the `writer` CLI expects when launching the app), which renames the bundled binary, desktop entry, and hicolor icons coherently, and the desktop entry gains a real Comment and Category instead of the crate boilerplate.
+
 ## 2026-08-08
 
 - Linux support: Writer now builds and ships as an AppImage. The window is opaque (translucency is a macOS vibrancy effect and would read as a washed-out blend on a plain Linux surface), the traffic-light gutter is dropped when the platform doesn't draw an overlay titlebar, and the theme clamps to a fully opaque background before first paint. Updates for Linux installs are signed with the fork's own key.
