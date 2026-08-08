@@ -51,6 +51,10 @@
      bleeds through globally when bg-opacity < 1. */
   --bg: color-mix(in srgb, var(--bg-base) calc(var(--bg-opacity) * 100%), transparent);
 
+  /* Left padding reserved for macOS traffic lights under the overlay
+     titlebar. Platforms with native window decorations don't need it. */
+  --chrome-side-padding: 92px;
+
   /* Text — fg-on-transparent so the alpha lets the real backdrop (including
      translucency) show through, instead of fixing a gray mid-tone against the
      opaque bg-base. */
@@ -126,6 +130,20 @@
 [data-theme="light"] {
   --surface-card: transparent;
   --surface-input: color-mix(in srgb, var(--fg-base) calc(var(--contrast) * 20%), transparent);
+}
+
+/* Platforms with native window decorations (no GTK overlay titlebar) don't
+   reserve the traffic-light gutter — let the chrome start at the window edge. */
+:root[data-platform="linux"],
+:root[data-platform="windows"] {
+  --chrome-side-padding: 12px;
+}
+
+/* Linux/Windows have no OS vibrancy backdrop, so the translucent background
+   would blend against the plain window surface and read washed out. Clamp to
+   opaque before theme hydration; theme.ts clamps again at runtime. */
+:root[data-platform="linux"] {
+  --bg-opacity: 1;
 }
 
 /* Dark mode: bump tab active bg so the focused tab stands out against the

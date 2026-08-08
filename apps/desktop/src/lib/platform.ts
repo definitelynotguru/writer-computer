@@ -8,3 +8,11 @@ export function detectPlatform(): Platform {
   if (/Win/i.test(ua)) return "windows";
   return "linux";
 }
+
+/** Tag the document root with the detected platform so CSS can adapt
+ *  (`data-platform="macos" | "windows" | "linux"`). */
+export function applyPlatformAttribute() {
+  if (typeof document !== "undefined") {
+    document.documentElement.dataset.platform = detectPlatform();
+  }
+}

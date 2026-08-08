@@ -6,6 +6,7 @@ import {
   type SettingDef,
   type ThemeMode,
 } from "./settings-schema";
+import { detectPlatform } from "./platform";
 
 export type ThemePreference = "system" | "light" | "dark";
 
@@ -32,7 +33,12 @@ function resolveMode(preference: ThemePreference): ThemeMode {
 const DERIVED_PRIMARIES: Partial<Record<PrimarySuffix, (v: unknown) => [string, string]>> = {
   translucent: (v) => {
     const t = clamp(Number(v) || 0, 0, 100);
-    return ["--bg-opacity", String(1 - (t / 100) * 0.95)];
+    // Translucency is only meaningful on macOS, where window vibrancy blurs
+    // the backdrop (window is `transparent` there). Linux/Windows have no
+    // backdrop to show through — keep the background fully opaque or every
+    // surface reads as a washed-out mix against the plain window.
+    const opacity = detectPlatform() === "macos" ? 1 - (t / 100) * 0.95 : 1;
+    return ["--bg-opacity", String(opacity)];
   },
   contrast: (v) => {
     // Slider 0-100 maps to effective 0.2-1.0
